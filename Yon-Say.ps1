@@ -12,21 +12,19 @@ $outfile = ".tmp"
 
 $background = Join-Path -Path $resources -ChildPath $bggif -Resolve
 $indent = " " * $firstline.Length
-$escapedfirst = ($firstline -replace '(?<Escape>[,:"\\])','\${Escape}')-replace '\\', '\\'
 
 $basetext = Read-Host -Prompt "Yon says"
 
 $chrcnt = 0
-$fnltxt = $escapedfirst
+Out-File -Filepath $outfile -InputObject $firstline -NoNewline -Encoding utf8
 foreach ($line in ($basetext -split "( )")) {
-    $escapedtext = ($line -replace '(?<Escape>[,:"\\])','\${Escape}') -replace '\\\\', ("\"*8)
-    echo $escapedtext
+    $escapedtext = $line -replace '\\','\\'
     $chrcnt += $line.Length 
     if ($chrcnt -gt $maxline) {
-        $fnltxt += "`n" + $indent
+        Out-File -FilePath $outfile -Append -InputObject ("`n" + $indent) -NoNewline -Encoding utf8
         $chrcnt = 0
     }
-    $fnltxt += $escapedtext
+    Out-File -FilePath $outfile -Append -InputObject $escapedtext -NoNewline -Encoding utf8
 }
 
 $ffmpegcommand = (
@@ -35,7 +33,7 @@ $ffmpegcommand = (
     "fontcolor=$fontcolor",
     "x=$textx",
     "y=$texty",
-    """text=$fnltxt"""
+    """textfile=$outfile"""
 ) -join (":")
 
 [Array]$imgargs =
