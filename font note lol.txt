@@ -1,0 +1,3 @@
+$String = 'Thank you for helping me learn the Powershell syntax!'
+$Font = New-Object System.Drawing.Font('Arial', 14)
+$Size = [System.Windows.Forms.TextRenderer]::MeasureText($String, $Font)
