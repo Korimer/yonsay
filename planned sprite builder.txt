@@ -1,0 +1,18 @@
+Each folder has a .config (.cfg?) 
+
+.config details 2 elements:
+- layer
+- exclusive
+
+
+ps script has a hashmap:
+- Key = int (layer)
+- Val = List<String>
+	where String is the abs. path to the resource folder.
+
+Behavior:
+- will list folders in current dir
+- - Users navigate by selecting from that list (eg, "1" to go to the first), 0 to go back
+
+
+post: 
