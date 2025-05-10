@@ -19,7 +19,7 @@ while ($true) {
     $usrinput = Read-Host "Choose"
     if ($usrinput -eq 0) {
         if ($curfolder -eq $resources) {break}
-        else {$curfolder = (Split-Path $curfolder -Parent -Resolve); echo $curfolder}
+        else {$curfolder = (Split-Path $curfolder -Parent -Resolve)}
     }
     else {
         if ($usrinput -le $active.Length) {
