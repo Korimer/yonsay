@@ -1,0 +1,7 @@
+text = 1
+body = 5
+head = 10
+hands = 11
+eyes = 15
+mouth = 15
+frame = 100
