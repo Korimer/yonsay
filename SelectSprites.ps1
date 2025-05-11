@@ -1,7 +1,6 @@
 $resources = Resolve-Path "SpriteResources"
 
 function List-Options {
-
     param (
         [Array]$arr
     )
