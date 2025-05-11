@@ -3,5 +3,5 @@ body = 5
 head = 10
 hands = 11
 eyes = 15
-mouth = 15
+mouth = 16
 frame = 100
