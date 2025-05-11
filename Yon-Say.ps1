@@ -36,7 +36,7 @@ foreach ($line in ($basetext -split "( )")) {
     Out-File -FilePath $tempfile -Append -InputObject $escapedtext -NoNewline -Encoding utf8
 }
 
-$textcommand = (
+$addtext = (
     "drawtext=fontfile=""Kiwi Fruit.otf""",
     "fontsize=$fontsize",
     "fontcolor=$fontcolor",
@@ -44,9 +44,9 @@ $textcommand = (
     "y=$texty",
     """textfile=$tempfile"""
 ) -join (":")
-$filtercommand = "split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"
+$fixpalette = "split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"
 
-$completefilter = ($textcommand,$filtercommand) -join(",")
+$completefilter = ($addtext,$fixpalette) -join(",")
 
 [Array]$completeargs =
     "-i",
