@@ -5,7 +5,7 @@ $resources = "./SpriteResources"
 $fontcolor = "#a8a8a8"
 $fontsize = "20"
 $bggif = "yon.gif"
-$output = "output.gif"
+$output = "outputb.gif"
 $tempfile = ".tmp"
 $textx = "130"
 $texty = "20"
@@ -41,15 +41,21 @@ foreach ($line in ($basetext -split "( )")) {
 }
 
 
-[Array]$spritedirs = 
-"Head/Tilting/Head Tilt",
-"Body/Default/Default"
+[Array]$spritedirs =
+    "Head/Tilted/Eyes/Huh/Eyes Tilted Huh",
+    "Head/Tilted/Mouth/Smile/Smile Tilted",
+    "Head/Tilted/Head Tilted",
+    "Body/Default/Default",
+    "Background/GUI/GUI",
+    "Background/Bg/BG",
+    "Background/TV/Edges/TV Edges"
+
 
 $i = 0
-$inputsprites = "-i " + """$(Join-Path -Path $resources -ChildPath $spritedirs[$i])" + "_Sprite_%02d.png"" "
+$inputsprites = "-i " + """$(Join-Path -Path $resources -ChildPath $spritedirs[$i])" + "_sprite_%02d.png"" "
 $combined = "[$i]null[comb$($i+1)];"
 for ($i=1; $i -le $spritedirs.Length-1; $i++) {
-    $inputsprites += "-i " + """$(Join-Path -Path $resources -ChildPath $spritedirs[$i])" + "_Sprite_%02d.png"" "
+    $inputsprites += "-i " + """$(Join-Path -Path $resources -ChildPath $spritedirs[$i])" + "_sprite_%02d.png"" "
     $combined += "[$i][comb$i]overlay[comb$($i+1)];"
 }
 $combined += "[comb$i]null[complete]"
@@ -68,7 +74,7 @@ $fixpalette = "[withtext]split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"
 $completefilter = ($combined,$addtext,$fixpalette) -join(";")
 #"[1][0] overlay [d]; [d]split [e][f]; [f]palettegen=reserve_transparent=on [p2];[e][p2] paletteuse"
 
-[Array]$completeargs =
+$completeargs = @(
     "$FFMPEGRemovePopups",
     "$inputsprites",
     "-filter_complex",
@@ -76,8 +82,9 @@ $completefilter = ($combined,$addtext,$fixpalette) -join(";")
     "$completefilter",
     """",
     "$output"
+) -join (" ") -split ("(?>`"(?: *)?(.*?)`"| )") | Where-Object {$_ -ne ""}
 
-"$completeargs"
+$completeargs
 Pause
 # aiming for 
 # ffmpeg -v warning -hide_banner -i ".\SpriteResources\Head\Tilting\Head Tilt_Sprite_%02d.png" -i ".\SpriteResources\Body\Default\Default_sprite_%02d.png"  -filter_complex "[0]null[comb1];[1][comb1]overlay[comb2];[comb2]null[complete];[complete]drawtext=fontfile=Kiwi.otf:fontsize=20:fontcolor=#a8a8a8:x=130:y=20:textfile=layer_key.txt[withtext];[withtext]split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" output.gif
