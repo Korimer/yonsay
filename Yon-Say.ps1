@@ -1,14 +1,16 @@
+$firstline = "C:  "
+
+$FFMPEGRemovePopups =  "-hide_banner"
 $resources = "./SpriteResources"
 $fontcolor = "#a8a8a8"
 $fontsize = "20"
 $bggif = "yon.gif"
 $output = "output.gif"
+$tempfile = ".tmp"
 $textx = "130"
 $texty = "20"
-
 $maxline = 69 # how many characters per line
-$firstline = "C:  "
-$tempfile = ".tmp"
+
 
 if (Test-Path $tempfile) {Remove-Item $tempfile}
 
@@ -38,35 +40,47 @@ foreach ($line in ($basetext -split "( )")) {
     Out-File -FilePath $tempfile -Append -InputObject $escapedtext -NoNewline -Encoding utf8
 }
 
-$addtext = (
-    "drawtext=fontfile=""Kiwi Fruit.otf""",
+
+[Array]$spritedirs = 
+"Head/Tilting/Head Tilt",
+"Body/Default/Default"
+
+$i = 0
+$inputsprites = "-i " + """$(Join-Path -Path $resources -ChildPath $spritedirs[$i])" + "_Sprite_%02d.png"" "
+$combined = "[$i]null[comb$($i+1)];"
+for ($i=1; $i -le $spritedirs.Length-1; $i++) {
+    $inputsprites += "-i " + """$(Join-Path -Path $resources -ChildPath $spritedirs[$i])" + "_Sprite_%02d.png"" "
+    $combined += "[$i][comb$i]overlay[comb$($i+1)];"
+}
+$combined += "[comb$i]null[complete]"
+
+$addtext = "[complete]" + ((
+    "drawtext=fontfile=Kiwi.otf",
     "fontsize=$fontsize",
     "fontcolor=$fontcolor",
     "x=$textx",
     "y=$texty",
-    """textfile=$tempfile"""
-) -join (":")
+    "textfile=$tempfile"
+) -join (":")) + "[withtext]"
 
-$fixpalette = "split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"
+$fixpalette = "[withtext]split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"
 
-[Array]$spritedirs = 
-    "Head/Tilting/Head_Tilt",
-    "Body/Default"
-
-$selectedsprites = foreach ($spritecomb in $spritedirs) {
-    (Join-Path -Path $resources -ChildPath $spritecomb).ToString() + "_Sprite_%02d.png"
-}
-
-$completefilter = ($addtext,$fixpalette) -join(",")
+$completefilter = ($combined,$addtext,$fixpalette) -join(";")
 #"[1][0] overlay [d]; [d]split [e][f]; [f]palettegen=reserve_transparent=on [p2];[e][p2] paletteuse"
 
 [Array]$completeargs =
-    "-i",
-    "$background",
-    "-vf",
+    "$FFMPEGRemovePopups",
+    "$inputsprites",
+    "-filter_complex",
+    """",
     "$completefilter",
+    """",
     "$output"
 
+"$completeargs"
+Pause
+# aiming for 
+# ffmpeg -v warning -hide_banner -i ".\SpriteResources\Head\Tilting\Head Tilt_Sprite_%02d.png" -i ".\SpriteResources\Body\Default\Default_sprite_%02d.png"  -filter_complex "[0]null[comb1];[1][comb1]overlay[comb2];[comb2]null[complete];[complete]drawtext=fontfile=Kiwi.otf:fontsize=20:fontcolor=#a8a8a8:x=130:y=20:textfile=layer_key.txt[withtext];[withtext]split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" output.gif
 & ffmpeg.exe $completeargs 
 
 Remove-Item $tempfile
