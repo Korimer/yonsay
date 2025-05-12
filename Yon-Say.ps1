@@ -40,11 +40,10 @@ foreach ($line in ($basetext -split "( )")) {
 
 
 [Array]$spritedirs =
-    "Body/Default/RH Out/RH Out",
-    "Head/Tilted/Eyes/Huh/Eyes Tilted Huh",
-    "Head/Tilted/Mouth/Smile/Smile Tilted",
-    "Head/Tilted/Head Tilted",
-    "Body/Default/Default",
+    "Background/Scanlines/RGB Scanlines",
+    "Background/Vignette/Vignette",
+    "Head/Bouncing/Head Bounce",
+    "Body/Default_Hands_Hidden/Default Hands Hidden",
     "Background/GUI/GUI",
     "Background/Bg/BG",
     "Background/TV/Edges/TV Edges"
