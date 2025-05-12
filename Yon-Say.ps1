@@ -1,14 +1,14 @@
-$firstline = "C:  "
+$firstline = "C: "
 
 $FFMPEGRemovePopups =  "-hide_banner -y"
 $resources = "./SpriteResources"
 $fontcolor = "#a8a8a8"
-$fontsize = "20"
+$fontsize = "16"
 $output = "output.gif"
 $tempfile = ".tmp"
 $textx = "130"
-$texty = "20"
-$maxline = 69 # how many characters per line
+$texty = "15"
+$maxline = 10000 # how many characters per line
 
 
 if (Test-Path $tempfile) {Remove-Item $tempfile}
@@ -40,13 +40,13 @@ foreach ($line in ($basetext -split "( )")) {
 
 
 [Array]$spritedirs =
+    "Background/TV/Edges/TV Edges",
     "Background/Scanlines/RGB Scanlines",
     "Background/Vignette/Vignette",
     "Head/Bouncing/Head Bounce",
     "Body/Default_Hands_Hidden/Default Hands Hidden",
     "Background/GUI/GUI",
-    "Background/Bg/BG",
-    "Background/TV/Edges/TV Edges"
+    "Background/Bg/BG"
 
 
 $i = 0
@@ -59,7 +59,7 @@ for ($i=1; $i -le $spritedirs.Length-1; $i++) {
 $combined += "[comb$i]null[complete]"
 
 $addtext = "[complete]" + ((
-    "drawtext=fontfile=Kiwi.otf",
+    "drawtext=fontfile=Perfect DOS VGA 437 Win.ttf",
     "fontsize=$fontsize",
     "fontcolor=$fontcolor",
     "x=$textx",
@@ -76,9 +76,8 @@ $completeargs = @(
     "$FFMPEGRemovePopups",
     "$inputsprites",
     "-filter_complex",
-    """",
-    "$completefilter",
-    """",
+    """$completefilter""",
+    "-r 80",
     "$output"
 ) -join (" ") -split ("(?>`"(?: *)?(.*?)`"| )") | Where-Object {$_ -ne ""}
 
