@@ -43,12 +43,16 @@ foreach ($line in ($basetext -split "( )")) {
     "Background/TV/Edges/TV Edges",
     "Background/Scanlines/RGB Scanlines",
     "Background/Vignette/Vignette",
-    "Head/Bouncing/Head Bounce",
-    "Body/Default_Hands_Hidden/Default Hands Hidden",
+    "Head/Tilted/Eyes/Closed/Eyes Tilted Closed",
+    "Head/Tilted/Mouth/Neutral/Neutral Tilted",
+    "Head/Tilted/Head Tilted",
+    "Body/Default/RH Out/RH Out",
+    "Body/Default/Default",
     "Background/GUI/GUI",
+    "Background/Tetras/Neon Tetras RH",
     "Background/Bg/BG"
 
-
+y
 $i = 0
 $inputsprites = "-i " + """$(Join-Path -Path $resources -ChildPath $spritedirs[$i])" + "_sprite_%02d.png"" "
 $combined = "[$i]null[comb$($i+1)];"
@@ -82,9 +86,8 @@ $completeargs = @(
 ) -join (" ") -split ("(?>`"(?: *)?(.*?)`"| )") | Where-Object {$_ -ne ""}
 
 $completeargs
-Pause
-# aiming for 
-# ffmpeg -v warning -hide_banner -i ".\SpriteResources\Head\Tilting\Head Tilt_Sprite_%02d.png" -i ".\SpriteResources\Body\Default\Default_sprite_%02d.png"  -filter_complex "[0]null[comb1];[1][comb1]overlay[comb2];[comb2]null[complete];[complete]drawtext=fontfile=Kiwi.otf:fontsize=20:fontcolor=#a8a8a8:x=130:y=20:textfile=layer_key.txt[withtext];[withtext]split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" output.gif
+pause
+
 & ffmpeg.exe $completeargs 
 
 Remove-Item $tempfile
