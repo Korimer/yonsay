@@ -1,11 +1,10 @@
 $firstline = "C:  "
 
-$FFMPEGRemovePopups =  "-hide_banner"
+$FFMPEGRemovePopups =  "-hide_banner -y"
 $resources = "./SpriteResources"
 $fontcolor = "#a8a8a8"
 $fontsize = "20"
-$bggif = "yon.gif"
-$output = "outputb.gif"
+$output = "output.gif"
 $tempfile = ".tmp"
 $textx = "130"
 $texty = "20"
@@ -14,7 +13,6 @@ $maxline = 69 # how many characters per line
 
 if (Test-Path $tempfile) {Remove-Item $tempfile}
 
-$background = Join-Path -Path $resources -ChildPath $bggif -Resolve
 $indent = " " * $firstline.Length
 
 $basetext = Read-Host -Prompt "Yon says"
@@ -42,6 +40,7 @@ foreach ($line in ($basetext -split "( )")) {
 
 
 [Array]$spritedirs =
+    "Body/Default/RH Out/RH Out",
     "Head/Tilted/Eyes/Huh/Eyes Tilted Huh",
     "Head/Tilted/Mouth/Smile/Smile Tilted",
     "Head/Tilted/Head Tilted",
